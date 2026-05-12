@@ -1,189 +1,220 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Para mi Lesly" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="theme-color" content="#f9a8c9" />
-  <meta name="description" content="Una app hecha con amor solo para ti." />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <link rel="icon" type="image/png" href="icons/favicon.ico" />
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jueguito de tiktok</title>
 
-  <title>Para mi niña Lesly</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Outfit', sans-serif;
+            color: white;
+        }
+
+        canvas {
+            display: block;
+            background: #1a1a1a;
+            margin: 0 auto;
+        }
+
+        #score {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 28px;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        /* Glassmorphism Modals */
+        .modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.3s;
+        }
+
+        .modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            width: 80%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #ff85a2;
+            font-weight: 800;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #ddd;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff4d79, #ff85a2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-family: inherit;
+            transition: transform 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Leaderboard */
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 18px;
+        }
+
+        .leaderboard-list li:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-list .rank-1 {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .leaderboard-list .rank-2 {
+            color: #c0c0c0;
+        }
+
+        .leaderboard-list .rank-3 {
+            color: #cd7f32;
+        }
+
+        /* Botones superiores */
+        .top-btns {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+    </style>
 </head>
+
 <body>
-  <canvas id="heartCanvas"></canvas>
-  <div id="touchParticles"></div>
+    <div id="score">0</div>
 
-  <section id="welcomeScreen" class="screen active">
-    <div class="welcome-content">
-      <div class="avatar-ring">
-        <div class="avatar-inner">
-          <span class="avatar-emoji">💕</span>
-        </div>
-      </div>
-      <h1 class="welcome-title">Hola mi vida <span class="heart-pulse">❤️</span></h1>
-      <p class="welcome-sub">Esta casi app fue hecha solo para ti, para recordarte día con día lo que siento por ti,<br>con todo el amor hecho para ti mi vida.</p>
-      <button class="btn-primary" onclick="goToMain()">
-        Entrar <span>✨</span>
-      </button>
-    </div>
-    <div class="scroll-hint">desliza para abajo</div>
-  </section>
-
-  <section id="mainScreen" class="screen">
-
-    <header class="app-header">
-      <span class="header-emoji">💖</span>
-      <h2 class="header-title">Para mi Less</h2>
-      <button id="audioBtn" class="audio-btn" onclick="toggleAudio()" title="Música">
-        <span id="audioIcon">🎵</span>
-      </button>
-    </header>
-
-    <div class="counter-card glass-card">
-      <div class="counter-label">Días que llevamos juntos</div>
-      <div class="counter-days" id="dayCounter">...</div>
-      <div class="counter-suffix">días de pura felicidad y amor real</div>
-      <div class="counter-date" id="counterDate"></div>
+    <div class="top-btns">
+        <button class="icon-btn" onclick="openSettings()">⚙️</button>
+        <button class="icon-btn" onclick="openLeaderboard()">🏆</button>
     </div>
 
-    <div class="message-card glass-card" id="messageCard">
-      <div class="message-icon">💌</div>
-      <p class="message-text" id="messageText">Puchale al botón para recibir un mensajitos de amor...</p>
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h2>Configuración</h2>
+
+            <div class="input-group">
+                <label>Tu Nombre</label>
+                <input type="text" id="playerNameInput" placeholder="Ej. Diego">
+            </div>
+
+            <button class="btn" onclick="saveSettings()">Guardar y Jugar</button>
+        </div>
     </div>
 
-    <button class="btn-main-love" id="loveBtn" onclick="showLoveMessage()">
-      <span class="btn-inner">
-        <span class="btn-heart">💖</span>
-        Presiónameeeee
-        <span class="btn-heart">💖</span>
-      </span>
-      <div class="btn-ripple"></div>
-    </button>
-
-    <nav class="bottom-nav">
-      <button class="nav-btn active" onclick="switchTab('home', this)">
-        <span>🏠</span><small>Inicio</small>
-      </button>
-      <button class="nav-btn" onclick="switchTab('gallery', this)">
-        <span>📸</span><small>Galería</small>
-      </button>
-      <button class="nav-btn" onclick="switchTab('secret', this)">
-        <span>🔐</span><small>Secretillo</small>
-      </button>
-    </nav>
-  </section>
-
-  <section id="galleryTab" class="tab-section hidden">
-    <div class="tab-header">
-      <h3>Nuestros fotos juntos</h3>
-      <p class="tab-sub">Aquí podremos subir fotos de los 2</p>
+    <!-- Leaderboard Modal -->
+    <div id="leaderboardModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>🏆 Mejores Puntos</h2>
+            <ul class="leaderboard-list" id="leaderboardList">
+                <li>Cargando...</li>
+            </ul>
+            <button class="btn" onclick="closeLeaderboard()">Cerrar</button>
+        </div>
     </div>
 
-    <div class="gallery-grid" id="galleryGrid">
-      <div class="photo-slot" onclick="addPhoto(0)">
-        <div class="photo-placeholder">
-          <span>📷</span>
-          <small>Agregar foto</small>
-        </div>
-        <img class="photo-img hidden" id="photo0" />
-      </div>
-      <div class="photo-slot" onclick="addPhoto(1)">
-        <div class="photo-placeholder">
-          <span>📷</span>
-          <small>Agregar foto</small>
-        </div>
-        <img class="photo-img hidden" id="photo1" />
-      </div>
-      <div class="photo-slot" onclick="addPhoto(2)">
-        <div class="photo-placeholder">
-          <span>📷</span>
-          <small>Agregar foto</small>
-        </div>
-        <img class="photo-img hidden" id="photo2" />
-      </div>
-      <div class="photo-slot" onclick="addPhoto(3)">
-        <div class="photo-placeholder">
-          <span>📷</span>
-          <small>Agregar foto</small>
-        </div>
-        <img class="photo-img hidden" id="photo3" />
-      </div>
-      <div class="photo-slot" onclick="addPhoto(4)">
-        <div class="photo-placeholder">
-          <span>📷</span>
-          <small>Agregar foto</small>
-        </div>
-        <img class="photo-img hidden" id="photo4" />
-      </div>
-      <div class="photo-slot" onclick="addPhoto(5)">
-        <div class="photo-placeholder">
-          <span>📷</span>
-          <small>Agregar foto</small>
-        </div>
-        <img class="photo-img hidden" id="photo5" />
-      </div>
-    </div>
-    <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="loadPhoto(event)" />
-  </section>
-
-  <section id="secretTab" class="tab-section hidden">
-    <div class="secret-lock" id="secretLock">
-      <div class="lock-icon">🔐</div>
-      <h3>Mensaje Secreto</h3>
-      <p>Escribe el nombre del amor de tu vida</p>
-      <div class="secret-input-wrap">
-        <input type="text" id="secretInput" class="secret-input" placeholder="¿Quién esta perdidamente enamorado de ti?" />
-        <button class="btn-unlock" onclick="unlockSecret()">Abrir 💫</button>
-      </div>
-      <p class="secret-hint" id="secretHint"></p>
-    </div>
-
-    <div class="secret-reveal hidden" id="secretReveal">
-      <div class="secret-stars">✨✨✨</div>
-      <div class="secret-heart-big">💝</div>
-      <h3 class="secret-title">Para mi niña, con todo el amor para ti</h3>
-      <div class="secret-letter glass-card">
-        <p>
-          Mi vida desde el momento en que llegaste a mi vida, todo cambió para bien.
-          Desde que te conocí busco ser mejor persona para ti y hacerte la más feliz del mundo.
-        </p>
-        <p>
-          Gracias por tu risa, por tu amor, por tu paciencia, por cada momento
-          que hemos vivido juntos. Eres mi persona favorita en esta vida y que siempre estara en mi corazón.
-        </p>
-        <p>
-          Esto lo hice con todo el amor del mundo mi vida, solo para demostrarte lo mucho que te amo
-          y para que nunca se te olvide que siempre te amare con todo mi corazón, mi vida, mi todo.
-        </p>
-        <p class="secret-sign">— Con todo mi amor,<br><strong>Diego</strong> 💖</p>
-      </div>
-      <button class="btn-primary" onclick="lockSecret()">Cerrar 🔒</button>
-    </div>
-  </section>
-
-  <!-- Elemento de audio oculto -->
-  <!-- Para agregar música: cambia 'tu-cancion.mp3' por la URL de tu canción -->
-  <!-- Puedes usar un MP3 de Google Drive (link directo) o de cualquier servidor -->
-  <audio id="bgMusic" loop preload="auto">
-    <!-- Reemplaza con la URL de tu canción favorita -->
-    <!-- <source src="cancion.mp3" type="audio/mpeg" /> -->
-    <!-- Ejemplo con URL: <source src="https://www.example.com/song.mp3" type="audio/mpeg" /> -->
-  </audio>
-
-  <!-- Lightbox para fotos -->
-  <div id="lightbox" class="lightbox hidden" onclick="closeLightbox()">
-    <img id="lightboxImg" class="lightbox-img" />
-    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  </div>
-
-  <script src="app.js"></script>
+    <script type="module" src="game.js"></script>
 </body>
+
 </html>
