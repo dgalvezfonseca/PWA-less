@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jueguito de tiktok</title>
+    <title>jueguito de tikitok</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
@@ -19,7 +19,9 @@
 
         canvas {
             display: block;
-            background: #1a1a1a;
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.58)),
+                url("fondo.png") center / cover no-repeat;
             margin: 0 auto;
         }
 
@@ -35,7 +37,6 @@
             z-index: 10;
         }
 
-        /* Glassmorphism Modals */
         .modal {
             position: absolute;
             top: 0;
@@ -121,7 +122,6 @@
             transform: scale(0.95);
         }
 
-        /* Leaderboard */
         .leaderboard-list {
             list-style: none;
             padding: 0;
@@ -155,7 +155,6 @@
             color: #cd7f32;
         }
 
-        /* Botones superiores */
         .top-btns {
             position: absolute;
             top: 20px;
@@ -188,22 +187,19 @@
     </div>
 
     <canvas id="gameCanvas"></canvas>
-
-    <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <h2>Configuración</h2>
 
             <div class="input-group">
                 <label>Tu Nombre</label>
-                <input type="text" id="playerNameInput" placeholder="Ej. Diego">
+                <input type="text" id="playerNameInput" placeholder="Ej. Lesly ADMV, Diego">
             </div>
 
             <button class="btn" onclick="saveSettings()">Guardar y Jugar</button>
         </div>
     </div>
 
-    <!-- Leaderboard Modal -->
     <div id="leaderboardModal" class="modal hidden">
         <div class="modal-content">
             <h2>🏆 Mejores Puntos</h2>
