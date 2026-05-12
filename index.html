@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>juego del tikitok</title>
+    <title>juegito de tikitok</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
@@ -66,6 +66,25 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
+        .start-title {
+            font-size: 34px;
+            margin: 0 0 8px;
+            color: #ff85a2;
+            font-weight: 800;
+        }
+
+        .start-subtitle,
+        .final-score {
+            color: rgba(255, 255, 255, 0.82);
+            margin: 0 0 18px;
+            font-size: 16px;
+        }
+
+        .final-score strong {
+            color: #fff;
+            font-size: 28px;
+        }
+
         h2 {
             margin-top: 0;
             color: #ff85a2;
@@ -118,6 +137,11 @@
 
         .btn:active {
             transform: scale(0.95);
+        }
+
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .leaderboard-list {
@@ -185,13 +209,25 @@
     </div>
 
     <canvas id="gameCanvas"></canvas>
-    <div id="settingsModal" class="modal">
+    <div id="startModal" class="modal">
+        <div class="modal-content">
+            <p class="start-title">Brinca brinca</p>
+            <p class="start-subtitle">Jugador: <span id="startPlayerNameText">Jugador</span></p>
+            <p class="start-subtitle">Mejor puntaje: <span id="bestScoreText">0</span></p>
+
+            <button class="btn" onclick="startGame()">Jugar</button>
+            <button class="btn secondary" onclick="openLeaderboard()">Ver ranking</button>
+            <button class="btn secondary" onclick="openSettings()">Cambiar nombre</button>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="modal hidden">
         <div class="modal-content">
             <h2>Configuración</h2>
 
             <div class="input-group">
                 <label>Tu Nombre</label>
-                <input type="text" id="playerNameInput" placeholder="Ej. Diego">
+                <input type="text" id="playerNameInput" placeholder="Ej. ,Lesly ADMV, Diego">
             </div>
 
             <button class="btn" onclick="saveSettings()">Guardar y Jugar</button>
@@ -205,6 +241,15 @@
                 <li>Cargando...</li>
             </ul>
             <button class="btn" onclick="closeLeaderboard()">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="gameOverModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Game Over</h2>
+            <p class="final-score">Puntaje final<br><strong id="finalScoreText">0</strong></p>
+            <button class="btn" onclick="retryGame()">Reintentar</button>
+            <button class="btn secondary" onclick="openLeaderboard()">Ver ranking</button>
         </div>
     </div>
 
