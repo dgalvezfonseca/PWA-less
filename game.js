@@ -1,6 +1,6 @@
 import { guardarScore, obtenerScores } from "./firebase.js";
 let playerName = "Jugador";
-let customEmoji = "💖";
+let customEmoji = "♥️";
 
 try {
     playerName = cleanPlayerName(localStorage.getItem("playerName"));
