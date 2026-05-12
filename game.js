@@ -125,6 +125,8 @@ if (isFirstTime) {
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+const backgroundImage = new Image();
+backgroundImage.src = "fondo.png";
 
 function resize() {
     canvas.width = window.innerWidth;
@@ -218,6 +220,44 @@ function drawPlayer() {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(customEmoji, player.x, player.y);
+}
+
+function drawBackground() {
+    if (backgroundImage.complete && backgroundImage.naturalWidth > 0) {
+        const canvasRatio = canvas.width / canvas.height;
+        const imageRatio = backgroundImage.naturalWidth / backgroundImage.naturalHeight;
+
+        let sourceX = 0;
+        let sourceY = 0;
+        let sourceWidth = backgroundImage.naturalWidth;
+        let sourceHeight = backgroundImage.naturalHeight;
+
+        if (imageRatio > canvasRatio) {
+            sourceWidth = backgroundImage.naturalHeight * canvasRatio;
+            sourceX = (backgroundImage.naturalWidth - sourceWidth) / 2;
+        } else {
+            sourceHeight = backgroundImage.naturalWidth / canvasRatio;
+            sourceY = (backgroundImage.naturalHeight - sourceHeight) / 2;
+        }
+
+        ctx.drawImage(
+            backgroundImage,
+            sourceX,
+            sourceY,
+            sourceWidth,
+            sourceHeight,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+    } else {
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.28)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 function drawPlatforms() {
@@ -318,6 +358,7 @@ function restartGame() {
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
 
     update();
     drawPlatforms();
