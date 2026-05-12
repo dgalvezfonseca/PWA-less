@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>jueguito de tikitok</title>
+    <title>juego del tikitok</title>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
@@ -19,9 +19,7 @@
 
         canvas {
             display: block;
-            background:
-                linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.58)),
-                url("fondo.png") center / cover no-repeat;
+            background: #000;
             margin: 0 auto;
         }
 
@@ -193,7 +191,7 @@
 
             <div class="input-group">
                 <label>Tu Nombre</label>
-                <input type="text" id="playerNameInput" placeholder="Ej. Lesly ADMV, Diego">
+                <input type="text" id="playerNameInput" placeholder="Ej. Diego">
             </div>
 
             <button class="btn" onclick="saveSettings()">Guardar y Jugar</button>
